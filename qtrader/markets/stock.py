@@ -5,28 +5,49 @@
 @Date    ：2024/11/6 11:45 
 @Desc    ：
 """
+from typing import List
+
 import akshare as ak
 import pandas as pd
 
 from qtrader.models import Stock
 
 
-class StockMarket:
+class StockMarketEM:
+    """东方财富股票市场数据"""
+
     @staticmethod
-    def stock_list() -> pd.DataFrame:
-        """获取沪深A股列表"""
+    def hsj_stocks() -> pd.DataFrame:
+        """获取 沪深京 A股列表"""
         return ak.stock_zh_a_spot_em()
 
     @staticmethod
-    def kline(symbol: str,
+    def boards() -> pd.DataFrame:
+        """获取板块"""
+        return ak.stock_board_industry_name_em()
+
+    @staticmethod
+    def board_stocks(symbol: str = '银行') -> pd.DataFrame:
+        """
+        获取板块成分股
+        Args:
+            symbol: 查询的板块名，名称来源于：StockMarketEM.boards()
+
+        Returns:
+
+        """
+        return ak.stock_board_industry_cons_em(symbol)
+
+    @staticmethod
+    def kline(code: str,
               period: str = "daily",
               start_date: str = "",
               end_date: str = "",
-              adjust: str = "qfq") -> list:
+              adjust: str = "qfq") -> List[Stock]:
         """
         获取历史k线数据
         Args:
-            symbol: 股票代码
+            code: 股票代码
             period: 周期，period='daily'; choice of {'daily', 'weekly', 'monthly'}
             start_date: 开始日期，start_date='20210301'
             end_date: 结束日期，end_date='20210301'
@@ -35,7 +56,7 @@ class StockMarket:
         Returns:
 
         """
-        df = ak.stock_zh_a_hist(symbol, period, start_date, end_date, adjust)
+        df = ak.stock_zh_a_hist(code, period, start_date, end_date, adjust)
         if df.empty:
             return []
 

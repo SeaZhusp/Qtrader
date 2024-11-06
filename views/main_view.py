@@ -14,3 +14,11 @@ class MainView(QMainWindow, Ui_Main):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        self.init_values()
+
+    def init_values(self):
+        self.statusbar.showMessage('欢迎使用智能量化研究平台！')
+
+    def init_connect(self):
+        pass

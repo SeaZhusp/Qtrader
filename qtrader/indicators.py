@@ -5,7 +5,7 @@
 @Date    ：2024/11/6 10:43 
 @Desc    ：各种指标获取
 """
-from typing import List
+from typing import List, Dict
 
 import numpy as np
 import talib
@@ -83,3 +83,53 @@ def MACD(fast_period, slow_period, signal_period, kline: List[Stock]) -> dict:
                                  signalperiod=signal_period)
     # 返回结果
     return {'DIF': DIF, 'DEA': DEA, 'MACD': _MACD * 2}  # MACD通常是DIF和DEA之差的两倍
+
+
+def KDJ(fastk_period: int, slowk_period: int, slowd_period: int, kline: List[Stock]) -> Dict[str, np.ndarray]:
+    """
+
+    Args:
+        fastk_period: 快速K的周期
+        slowk_period: 慢速K的周期
+        slowd_period: 慢速D的周期
+        kline: 股票的K线数据，包含高、低、收盘价
+
+    Returns:返回一个字典，包含 'k' 和 'd' 数组，分别表示 K 和 D 值
+
+    """
+    kline_length = len(kline)
+    high_array = np.zeros(kline_length)
+    low_array = np.zeros(kline_length)
+    close_array = np.zeros(kline_length)
+
+    # 提取高、低、收盘价
+    for t, item in enumerate(kline):
+        high_array[t] = item.high  # 最高价
+        low_array[t] = item.low  # 最低价
+        close_array[t] = item.close  # 收盘价
+
+    # 使用 TALIB 计算 STOCH（KDJ 指标的核心计算方法）
+    slowk, slowd = talib.STOCH(
+        high_array, low_array, close_array,
+        fastk_period=fastk_period,
+        slowk_period=slowk_period,
+        slowk_matype=0,  # 默认采用简单移动平均
+        slowd_period=slowd_period,
+        slowd_matype=0  # 默认采用简单移动平均
+    )
+
+    # 返回 K 和 D 数组
+    return {'k': slowk, 'd': slowd}
+
+
+def VOLUME(kline: List[Stock]):
+    """
+    成交量
+    Args:
+        kline: 传入指定k线数据
+
+    Returns:返回一个一维数组
+
+    """
+    volume_array = np.array([item.volume for item in kline])
+    return volume_array
