@@ -16,12 +16,9 @@ from qtrader.models import Stock
 def MA(size: int, kline: List[Stock]) -> list:
     """
     计算简单移动平均线 (SMA)
-    Args:
-        size: 时间周期，例如20表示20天的移动平均
-        kline: 股票K线数据，传入指定k线数据
-
-    Returns: 返回一个一维数组，包含每个时间点的SMA值
-
+    :param size: 时间周期，例如20表示20天的移动平均
+    :param kline: 股票K线数据，传入指定k线数据
+    :return: 返回一个一维数组，包含每个时间点的SMA值
     """
     if not kline:
         return []
@@ -35,12 +32,9 @@ def MA(size: int, kline: List[Stock]) -> list:
 def BOLL(size: int, kline: List[Stock]) -> dict:
     """
     计算布林带 (Bollinger Bands)
-    Args:
-        size: 时间周期（例如20）
-        kline: 股票K线数据，传入指定k线数据
-
-    Returns:返回一个字典 {"upper_band": 上轨数组， "middle_band": 中轨数组， "lower_band": 下轨数组}
-
+    :param size: 时间周期（例如20）
+    :param kline: 股票K线数据，传入指定k线数据
+    :return: 返回一个字典 {"upper_band": 上轨数组， "middle_band": 中轨数组， "lower_band": 下轨数组}
     """
     if not kline:
         return {"upper_band": [], "middle_band": [], "lower_band": []}
@@ -62,14 +56,11 @@ def BOLL(size: int, kline: List[Stock]) -> dict:
 def MACD(fast_period, slow_period, signal_period, kline: List[Stock]) -> dict:
     """
 
-    Args:
-        fast_period: 快速均线的周期（常见为12）
-        slow_period: 慢速均线的周期（常见为26）
-        signal_period: 信号线的周期（常见为9）
-        kline: 传入指定k线数据
-
-    Returns:返回一个字典 {'dif': dif数组, 'dea': dea数组, 'macd': macd数组}
-
+    :param fast_period: 快速均线的周期（常见为12）
+    :param slow_period: 慢速均线的周期（常见为26）
+    :param signal_period: 信号线的周期（常见为9）
+    :param kline: 传入指定k线数据
+    :return: 返回一个字典 {'dif': dif数组, 'dea': dea数组, 'macd': macd数组}
     """
     # 检查kline数据是否为空
     if not kline:
@@ -88,14 +79,11 @@ def MACD(fast_period, slow_period, signal_period, kline: List[Stock]) -> dict:
 def KDJ(fastk_period: int, slowk_period: int, slowd_period: int, kline: List[Stock]) -> Dict[str, np.ndarray]:
     """
 
-    Args:
-        fastk_period: 快速K的周期
-        slowk_period: 慢速K的周期
-        slowd_period: 慢速D的周期
-        kline: 股票的K线数据，包含高、低、收盘价
-
-    Returns:返回一个字典，包含 'k' 和 'd' 数组，分别表示 K 和 D 值
-
+    :param fastk_period: 快速K的周期
+    :param slowk_period: 慢速K的周期
+    :param slowd_period: 慢速D的周期
+    :param kline: 股票的K线数据，包含高、低、收盘价
+    :return: 返回一个字典，包含 'k' 和 'd' 数组，分别表示 K 和 D 值
     """
     kline_length = len(kline)
     high_array = np.zeros(kline_length)
@@ -122,14 +110,11 @@ def KDJ(fastk_period: int, slowk_period: int, slowd_period: int, kline: List[Sto
     return {'k': slowk, 'd': slowd}
 
 
-def VOLUME(kline: List[Stock]):
+def VOLUME(kline: List[Stock]) -> np.ndarray:
     """
     成交量
-    Args:
-        kline: 传入指定k线数据
-
-    Returns:返回一个一维数组
-
+    :param kline: 传入指定k线数据
+    :return: 返回一个一维数组
     """
     volume_array = np.array([item.volume for item in kline])
     return volume_array

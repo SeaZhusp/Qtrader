@@ -16,14 +16,7 @@ class DingTalk:
         self.url = url
 
     def text(self, content):
-        """
-        推送文本类型信息至钉钉
-        Args:
-            content: 要推送的数据内容，字符串格式
-
-        Returns:推送结果，例如推送成功时的结果：{"errcode":0,"errmsg":"ok"}
-
-        """
+        """推送文本类型信息至钉钉"""
         json_text = {
             "msgtype": "text",
             "at": {
@@ -45,16 +38,13 @@ class DingTalk:
     def markdown(self, content, title: str = '提醒'):
         """
         推送markdown类型信息至钉钉
-        Args:
-            content: 消息内容
+        :param content: 消息内容
                             content = "### 订单更新推送\n\n"\
                                        "> **订单ID:** 1096989546123445\n\n"\
                                        "> **订单状态:** FILLED\n\n"\
                                        "> **时间戳:** 2021年1月2日"
-            title: 消息标题
-
-        Returns:推送结果，例如推送成功时的结果：{"errcode":0,"errmsg":"ok"}
-
+        :param title: 消息标题
+        :return:
         """
         headers = {'Content-Type': 'application/json'}
         body = {

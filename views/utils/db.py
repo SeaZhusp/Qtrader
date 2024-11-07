@@ -18,47 +18,76 @@ class Sqlite3Manager:
         return sqlite3.connect('database.db')
 
     @staticmethod
-    def fetch_data(sql, *args):
+    def fetch_data(sql: str, *args):
         conn = Sqlite3Manager.create_conn()
+        cursor = conn.cursor()
         try:
-            cursor = conn.cursor()
-            cursor.execute(sql, *args)
+            cursor.execute(sql, args)
             result = cursor.fetchall()
             return result
         except Exception as e:
-            logger.error(f" sql error! because: {e}")
+            logger.error(f"SQL error! SQL: {sql}, Args: {args}, Error: {e}")
         finally:
+            cursor.close()
             conn.close()
 
     @staticmethod
-    def fetch_one(sql, *args):
+    def fetch_one(sql: str, *args):
         conn = Sqlite3Manager.create_conn()
+        cursor = conn.cursor()
         try:
-            cursor = conn.cursor()
-            cursor.execute(sql, *args)
+            cursor.execute(sql, args)
             result = cursor.fetchone()
             return result
         except Exception as e:
-            logger.error(f" sql error! because: {e}")
+            logger.error(f"SQL error! SQL: {sql}, Args: {args}, Error: {e}")
         finally:
+            cursor.close()
             conn.close()
 
     @staticmethod
     def item_to_table(table_name: str, item: Dict[str, Any]):
         conn = Sqlite3Manager.create_conn()
+        cursor = conn.cursor()
+        sql = ""
+        values = []
         try:
-            cursor = conn.cursor()
             fields = list(item.keys())
             values = list(item.values())
-            fields = [f'{field}' for field in fields]
+            fields = [f'`{field}`' for field in fields]
             field_str = ','.join(fields)
             val_str = ','.join(['?'] * len(item))
-            sql = "INSERT INTO %s (%s) VALUES(%s)" % (table_name, field_str, val_str)
+            sql = f"INSERT INTO {table_name} ({field_str}) VALUES({val_str})"
             cursor.execute(sql, values)
-            conn.commit()  # 提交事务
+            conn.commit()
+            return cursor.lastrowid
+
+        except Exception as e:
+            conn.rollback()
+            logger.error(f"SQL error! SQL: {sql}, Values: {values}, Error: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def insert_table(table_name: str, item: Dict[str, Any]):
+        conn = Sqlite3Manager.create_conn()
+        cursor = conn.cursor()
+        sql = ""
+        values = []
+        try:
+            fields = list(item.keys())
+            values = list(item.values())
+            fields = [f'`{field}`' for field in fields]
+            field_str = ','.join(fields)
+            val_str = ','.join(['?'] * len(item))
+            sql = f"INSERT INTO {table_name} ({field_str}) VALUES({val_str})"
+            cursor.execute(sql, values)
+            conn.commit()
             return cursor.lastrowid
         except Exception as e:
             conn.rollback()
-            logger.error(f" sql error! because: {e}")
+            logger.error(f"SQL error! SQL: {sql}, Values: {values}, Error: {e}")
         finally:
+            cursor.close()
             conn.close()

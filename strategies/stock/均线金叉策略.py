@@ -5,7 +5,7 @@
 @Date    ：2024/11/6 11:28 
 @Desc    ：
 """
-from qtrader.markets.stock import StockMarketEM
+from qtrader.market.stock import StockMarket
 from qtrader.indicators import *
 
 
@@ -14,10 +14,10 @@ class MoveAvgGoldenCross:
         pass
 
     def begin(self):
-        stock_list = StockMarketEM.hsj_stocks()
+        stock_list = StockMarket.hsj_stocks()
         stock_pool = []
         for symbol in stock_list['代码']:
-            kline = StockMarketEM.kline(symbol, 'daily', '20240101', '20241105', 'qfq')
+            kline = StockMarket.kline(symbol, 'daily', '20240101', '20241105', 'qfq')
             if len(kline) < 30:
                 continue
             ma5 = MA(5, kline)

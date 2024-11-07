@@ -6,10 +6,10 @@
 @Desc    ：
 """
 import unittest
-from qtrader.markets.stock import StockMarketEM
+from qtrader.market.stock import StockMarket
 
 
 class TestMA(unittest.TestCase):
     def test_boll(self):
         symbol = '000001'
-        StockMarketEM.kline(symbol)
+        StockMarket.kline(symbol)

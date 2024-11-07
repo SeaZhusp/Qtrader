@@ -13,7 +13,7 @@ import pandas as pd
 from qtrader.models import Stock
 
 
-class StockMarketEM:
+class StockMarket:
     """东方财富股票市场数据"""
 
     @staticmethod
@@ -27,14 +27,11 @@ class StockMarketEM:
         return ak.stock_board_industry_name_em()
 
     @staticmethod
-    def board_stocks(symbol: str = '银行') -> pd.DataFrame:
+    def board_stocks(symbol: str = '小金属') -> pd.DataFrame:
         """
         获取板块成分股
-        Args:
-            symbol: 查询的板块名，名称来源于：StockMarketEM.boards()
-
-        Returns:
-
+        :param symbol: 查询的板块名，名称来源于：StockMarketEM.boards()
+        :return:
         """
         return ak.stock_board_industry_cons_em(symbol)
 
@@ -45,18 +42,16 @@ class StockMarketEM:
               end_date: str = "",
               adjust: str = "qfq") -> List[Stock]:
         """
-        获取历史k线数据
-        Args:
-            code: 股票代码
-            period: 周期，period='daily'; choice of {'daily', 'weekly', 'monthly'}
-            start_date: 开始日期，start_date='20210301'
-            end_date: 结束日期，end_date='20210301'
-            adjust: 默认返回不复权的数据; qfq: 返回前复权后的数据; hfq: 返回后复权后的数据
-
-        Returns:
-
+        获取股票的K线
+        :param code: 股票代码
+        :param period: 周期，period='daily'; choice of {'daily', 'weekly', 'monthly'}
+        :param start_date: 开始日期，start_date='20210301'
+        :param end_date: 结束日期，end_date='20210301'
+        :param adjust: 默认返回不复权的数据; qfq: 返回前复权后的数据; hfq: 返回后复权后的数据
+        :return:
         """
         df = ak.stock_zh_a_hist(code, period, start_date, end_date, adjust)
+        print(df)
         if df.empty:
             return []
 
@@ -64,13 +59,10 @@ class StockMarketEM:
         if '日期' not in df.columns:
             raise ValueError("Dataframe does not contain '日期' column")
 
-        # Convert '日期' to datetime
-        df['date'] = pd.to_datetime(df['日期'])
-
         # Convert DataFrame rows to list of Stock Pydantic models
         stock_data_list = [
             Stock(
-                date=row['date'].strftime('%Y-%m-%d'),
+                date=row['日期'].strftime('%Y-%m-%d'),
                 symbol=row['股票代码'],
                 open=row['开盘'],
                 close=row['收盘'],
