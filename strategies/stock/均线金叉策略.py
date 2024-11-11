@@ -6,22 +6,23 @@
 @Desc    ：
 """
 from qtrader.market.stock import StockMarket
-from qtrader.indicators import *
+from qtrader.factors import Indicators
+from qtrader.base.base_strategy import BaseStrategy
 
 
-class MoveAvgGoldenCross:
+class MoveAvgGoldenCross(BaseStrategy):
     def __init__(self):
         pass
 
-    def begin(self):
+    def run(self):
         stock_list = StockMarket.hsj_stocks()
         stock_pool = []
         for symbol in stock_list['代码']:
             kline = StockMarket.kline(symbol, 'daily', '20240101', '20241105', 'qfq')
             if len(kline) < 30:
                 continue
-            ma5 = MA(5, kline)
-            ma10 = MA(10, kline)
+            ma5 = Indicators.ma(5, kline)
+            ma10 = Indicators.ma(10, kline)
 
             if ma5[-1] > ma10[-1] and ma5[-2] <= ma10[-2]:
                 stock_pool.append(symbol)
@@ -32,4 +33,4 @@ class MoveAvgGoldenCross:
 
 
 if __name__ == '__main__':
-    MoveAvgGoldenCross().begin()
+    MoveAvgGoldenCross().run()
