@@ -2,8 +2,8 @@
 """
 @Author  ：秋枫zsp
 @Email   ：370172879@qq.com
-@Date    ：2024/11/6 10:43 
-@Desc    ：各种因子
+@Date    ：2024/11/6 10:43
+@Desc    ：指标
 """
 from typing import List, Dict
 

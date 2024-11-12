@@ -63,7 +63,7 @@ class StockMarket:
         stock_data_list = [
             Stock(
                 date=row['日期'].strftime('%Y-%m-%d'),
-                symbol=row['股票代码'],
+                code=row['股票代码'],
                 open=row['开盘'],
                 close=row['收盘'],
                 high=row['最高'],
