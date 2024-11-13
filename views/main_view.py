@@ -8,6 +8,7 @@
 from PySide6.QtWidgets import QMainWindow
 
 from views.ui_desiners.ui_main import Ui_Main
+from views.logics.initialize import StrategyInit
 
 
 class MainView(QMainWindow, Ui_Main):
@@ -19,6 +20,8 @@ class MainView(QMainWindow, Ui_Main):
 
     def init_values(self):
         self.statusbar.showMessage('欢迎使用智能量化研究平台！')
+
+        self.StrategyList.addItems(StrategyInit.stock_selection_strategies())
 
     def init_connect(self):
         pass

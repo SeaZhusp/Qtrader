@@ -11,6 +11,7 @@ import akshare as ak
 import pandas as pd
 
 from qtrader.models import Stock
+from qtrader.utils.dtc import df_to_stock_list
 
 
 class StockMarket:
@@ -51,30 +52,4 @@ class StockMarket:
         :return:
         """
         df = ak.stock_zh_a_hist(code, period, start_date, end_date, adjust)
-        print(df)
-        if df.empty:
-            return []
-
-        # Ensure '日期' column exists
-        if '日期' not in df.columns:
-            raise ValueError("Dataframe does not contain '日期' column")
-
-        # Convert DataFrame rows to list of Stock Pydantic models
-        stock_data_list = [
-            Stock(
-                date=row['日期'].strftime('%Y-%m-%d'),
-                symbol=row['股票代码'],
-                open=row['开盘'],
-                close=row['收盘'],
-                high=row['最高'],
-                low=row['最低'],
-                volume=row['成交量'],
-                turnover=row['成交额'],
-                amplitude=row['振幅'],
-                percent=row['涨跌幅'],
-                amount=row['涨跌额'],
-                turnover_rate=row['换手率']
-            )
-            for _, row in df.iterrows()
-        ]
-        return stock_data_list
+        return df_to_stock_list(df, Stock)
