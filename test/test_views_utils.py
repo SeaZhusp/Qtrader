@@ -6,7 +6,7 @@
 @Desc    ：
 """
 import unittest
-from qtrader.utils import FileTool
+from views.utils.tools import FileTool
 
 
 class TestViewsUtilsTools(unittest.TestCase):

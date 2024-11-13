@@ -13,7 +13,7 @@ from pydantic import BaseModel
 class Stock(BaseModel):
     """ 实时行情数据"""
     date: Optional[str] = None  # 交易日
-    code: Optional[str] = None  # 股票代码
+    symbol: Optional[str] = None  # 股票代码
     name: Optional[str] = None  # 股票名称
     last: Optional[float] = None  # 当前价格
     open: Optional[float] = None  # 开盘价

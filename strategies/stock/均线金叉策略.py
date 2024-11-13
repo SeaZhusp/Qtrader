@@ -6,30 +6,26 @@
 @Desc    ：
 """
 from qtrader.market.stock import StockMarket
-from qtrader import BaseStrategy, Indicators, TimeTool
+from qtrader.factors import Indicators
+from qtrader.base.base_strategy import BaseStrategy
 
 
 class MoveAvgGoldenCross(BaseStrategy):
-    strategy_name = "MACD策略"
-
     def __init__(self):
-        super().__init__()
-        period = 30
-        self.now = TimeTool.dt_to_str()
-        self.last_3_day = TimeTool.dt_to_str(delta_day=-period)
+        pass
 
     def run(self):
         stock_list = StockMarket.hsj_stocks()
         stock_pool = []
-        for code in stock_list['代码']:
-            kline = StockMarket.kline(code, 'daily', self.last_3_day, self.now, 'qfq')
+        for symbol in stock_list['代码']:
+            kline = StockMarket.kline(symbol, 'daily', '20240101', '20241105', 'qfq')
             if len(kline) < 30:
                 continue
             ma5 = Indicators.ma(5, kline)
             ma10 = Indicators.ma(10, kline)
 
             if ma5[-1] > ma10[-1] and ma5[-2] <= ma10[-2]:
-                stock_pool.append(code)
+                stock_pool.append(symbol)
                 print(ma5)
             if stock_pool:
                 break
